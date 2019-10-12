@@ -43,7 +43,7 @@ module "ireland-cluster" {
   broker-count   = 3
   zk-count       = 3
   connect-count  = 1
-  producer-count = 2
+  producer-count = 0
   consumer-count = 0
   c3-count       = 1
   name           = "ireland-cluster"

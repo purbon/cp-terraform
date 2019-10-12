@@ -198,6 +198,26 @@ resource "aws_security_group" "brokers" {
       security_groups = ["${aws_security_group.bastions.id}","${aws_security_group.ssh.id}", "${aws_security_group.connect.id}"] # should an explicit group for clients, ssh covers it
   }
 
+  # monitoring connections - jmx_exporter (from ssh hosts, bastion and myip)
+  ingress {
+      from_port = 9100
+      to_port = 9100
+      protocol = "TCP"
+      self = true
+      cidr_blocks = ["${local.myip-cidr}"]
+      security_groups = ["${aws_security_group.bastions.id}","${aws_security_group.ssh.id}","${aws_security_group.tools.id}"]
+  }
+
+  # monitoring connections - node_exporter (from ssh hosts, bastion and myip)
+  ingress {
+      from_port = 9101
+      to_port = 9101
+      protocol = "TCP"
+      self = true
+      cidr_blocks = ["${local.myip-cidr}"]
+      security_groups = ["${aws_security_group.bastions.id}","${aws_security_group.ssh.id}","${aws_security_group.tools.id}"]
+  }
+
   # Allow ping from my ip, self, bastion
   ingress {
     from_port = 8
@@ -242,6 +262,27 @@ resource "aws_security_group" "zookeepers" {
       protocol = "TCP"
       self = true
   }
+
+  # monitoring connections - jmx_exporter (from ssh hosts, bastion and myip)
+  ingress {
+      from_port = 9100
+      to_port = 9100
+      protocol = "TCP"
+      self = true
+      cidr_blocks = ["${local.myip-cidr}"]
+      security_groups = ["${aws_security_group.bastions.id}","${aws_security_group.ssh.id}","${aws_security_group.tools.id}"]
+  }
+  
+  # monitoring connections - node_exporter (from ssh hosts, bastion and myip)
+  ingress {
+      from_port = 9101
+      to_port = 9101
+      protocol = "TCP"
+      self = true
+      cidr_blocks = ["${local.myip-cidr}"]
+      security_groups = ["${aws_security_group.bastions.id}","${aws_security_group.ssh.id}","${aws_security_group.tools.id}"]
+  }
+
 
   ingress {
       from_port = 3888
@@ -289,6 +330,23 @@ resource "aws_security_group" "tools" {
       protocol = "TCP"
       cidr_blocks = ["${local.myip-cidr}"]
   }
+
+# prometheus web ui
+  ingress {
+      from_port = 9090
+      to_port = 9090
+      protocol = "TCP"
+      cidr_blocks = ["${local.myip-cidr}"]
+  }
+
+# grafana web ui
+  ingress {
+      from_port = 3000
+      to_port = 3000
+      protocol = "TCP"
+      cidr_blocks = ["${local.myip-cidr}"]
+  }
+
 
   egress {
       from_port = 0
@@ -364,7 +422,7 @@ resource "aws_instance" "tools" {
   ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "${local.tools-instance-type}"
   availability_zone = "${element(var.azs, 0)}"
-  security_groups = ["${aws_security_group.tools.name}"]
+  security_groups = ["${aws_security_group.tools.name}", "${aws_security_group.ssh.name}"]
   key_name = "${var.key_name}"
   tags = {
     Name = "${var.ownershort}-tools"
