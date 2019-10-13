@@ -68,6 +68,14 @@ resource "aws_instance" "brokers" {
   }
 }
 
+resource "aws_volume_attachment" "brokers-ebs_attachment" {
+  count         = "${var.broker-count}"
+  device_name = "/dev/sda2"
+  volume_id   = aws_ebs_volume.brokers[count.index].id
+  instance_id =  aws_instance.brokers[count.index].id
+  skip_destroy = true
+}
+
 resource "aws_instance" "zookeeper" {
   count         = "${var.zk-count}"
   ami           = "${data.aws_ami.ubuntu.id}"
