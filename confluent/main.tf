@@ -23,6 +23,8 @@ locals {
   c3-instance-type = "t2.large"
   client-instance-type = "t2.large"
   tools-instance-type = "t2.large"
+  proxy-instance-type = "t2.medium"
+
 }
 
 locals {
