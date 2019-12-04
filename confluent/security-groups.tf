@@ -102,7 +102,7 @@ resource "aws_security_group" "brokers" {
       protocol = "TCP"
       self = true
       cidr_blocks = ["${local.myip-cidr}"]
-      security_groups = ["${aws_security_group.bastions.id}","${aws_security_group.ssh.id}", "${aws_security_group.connect.id}"] # should an explicit group for clients, ssh covers it
+      security_groups = ["${aws_security_group.bastions.id}","${aws_security_group.ssh.id}", "${aws_security_group.connect.id}", "${aws_security_group.schema-registry.id}"] # should an explicit group for clients, ssh covers it
   }
 
   # monitoring connections - jmx_exporter (from ssh hosts, bastion and myip)
@@ -274,6 +274,29 @@ resource "aws_security_group" "connect" {
   ingress {
       from_port = 8083
       to_port = 8083
+      protocol = "TCP"
+      self = true
+      cidr_blocks = ["${local.myip-cidr}"]
+      security_groups = ["${aws_security_group.c3.id}", "${aws_security_group.ssh.id}"]
+  }
+
+  egress {
+      from_port = 0
+      to_port = 0
+      protocol = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "schema-registry" {
+  description = "Schema Registry security group - Managed by Terraform"
+  name = "${var.ownershort}-schema-registry"
+
+  # connect http interface - only accessible on host, without this
+  # schema-registry needs access
+  ingress {
+      from_port = 8081
+      to_port = 8081
       protocol = "TCP"
       self = true
       cidr_blocks = ["${local.myip-cidr}"]

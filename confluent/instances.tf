@@ -96,6 +96,34 @@ resource "aws_instance" "zookeeper" {
   }
 }
 
+resource "aws_instance" "schema-registry" {
+  count         = "${var.schema-registry-count}"
+  ami           = "${data.aws_ami.ubuntu.id}"
+  instance_type = "${local.schema-registry-instance-type}"
+  availability_zone = "${element(var.azs, count.index)}"
+  # security_groups = ["${var.security_group}"]
+  security_groups = ["${aws_security_group.schema-registry.name}", "${aws_security_group.ssh.name}"]
+  key_name = "${var.key_name}"
+  root_block_device {
+    volume_size = 1000 # 1TB
+  }
+  tags = {
+    Name = "${var.ownershort}-schema-registry-${count.index}-${element(var.azs, count.index)}"
+    description = "schema-registry nodes - Managed by Terraform"
+    nice-name = "SchemaRegistry-${count.index}"
+    big-nice-name = "SchemaRegistry-${count.index}"
+    role = "schema-registry"
+    Role = "schema-registry"
+    owner = "${var.owner}"
+    sshUser = "ubuntu"
+    # sshPrivateIp = true // this is only checked for existence, not if it's true or false by terraform.py (ati)
+    createdBy = "terraform"
+    # ansible_python_interpreter = "/usr/bin/python3"
+    region = "${var.region}"
+
+  }
+}
+
 resource "aws_instance" "connect-cluster" {
   count         = "${var.connect-count}"
   ami           = "${data.aws_ami.ubuntu.id}"

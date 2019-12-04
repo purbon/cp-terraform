@@ -12,6 +12,11 @@ variable "broker-count" {
 variable "connect-count" {
   default = 1
 }
+
+variable "schema-registry-count" {
+  default = 0
+}
+
 variable "c3-count" {}
 
 provider "aws" {

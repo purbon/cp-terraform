@@ -20,6 +20,7 @@ locals {
   zk-instance-type = "t2.large"
   connect-instance-type = "t2.large"
   broker-instance-type = "t2.large"
+  schema-registry-instance-type = "t2.large"
   c3-instance-type = "t2.large"
   client-instance-type = "t2.large"
   tools-instance-type = "t2.large"

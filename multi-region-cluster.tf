@@ -42,9 +42,10 @@ module "ireland-cluster" {
   source         = "./confluent"
   broker-count   = 3
   zk-count       = 3
-  connect-count  = 1
+  connect-count  = 0
   producer-count = 0
   consumer-count = 0
+  schema-registry-count = 3
   c3-count       = 1
   name           = "ireland-cluster"
   region         = "eu-west-1"
