@@ -1,11 +1,11 @@
 
 resource "aws_instance" "bastion" {
   #count = 1
-  ami           = "${data.aws_ami.ubuntu.id}"
-  instance_type = "${local.bastion-instance-type}"
-  availability_zone = "${element(var.azs, 0)}"
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = local.bastion-instance-type
+  availability_zone = element(var.azs, 0)
   security_groups = ["${aws_security_group.bastions.name}"]
-  key_name = "${var.key_name}"
+  key_name = var.key_name
   tags = {
     Name = "${var.ownershort}-bastion"
     description = "bastion node - Managed by Terraform"
@@ -21,11 +21,11 @@ resource "aws_instance" "bastion" {
 
 resource "aws_instance" "tools" {
   #count = 1
-  ami           = "${data.aws_ami.ubuntu.id}"
-  instance_type = "${local.tools-instance-type}"
-  availability_zone = "${element(var.azs, 0)}"
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = local.tools-instance-type
+  availability_zone = element(var.azs, 0)
   security_groups = ["${aws_security_group.tools.name}", "${aws_security_group.ssh.name}"]
-  key_name = "${var.key_name}"
+  key_name = var.key_name
   tags = {
     Name = "${var.ownershort}-tools"
     description = "tools node - Managed by Terraform"
@@ -39,13 +39,13 @@ resource "aws_instance" "tools" {
 }
 
 resource "aws_instance" "brokers" {
-  count         = "${var.broker-count}"
-  ami           = "${data.aws_ami.ubuntu.id}"
-  instance_type = "${local.broker-instance-type}"
-  availability_zone = "${element(var.azs, count.index)}"
+  count         = var.broker-count
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = local.broker-instance-type
+  availability_zone = element(var.azs, count.index)
   # security_groups = ["${var.security_group}"]
   security_groups = ["${aws_security_group.brokers.name}", "${aws_security_group.ssh.name}"]
-  key_name = "${var.key_name}"
+  key_name = var.key_name
   root_block_device {
     volume_size = 1000 # 1TB
   }
@@ -69,7 +69,7 @@ resource "aws_instance" "brokers" {
 }
 
 resource "aws_volume_attachment" "brokers-ebs_attachment" {
-  count         = "${var.broker-count}"
+  count         = var.broker-count
   device_name = "/dev/sda2"
   volume_id   = aws_ebs_volume.brokers[count.index].id
   instance_id =  aws_instance.brokers[count.index].id
@@ -77,12 +77,12 @@ resource "aws_volume_attachment" "brokers-ebs_attachment" {
 }
 
 resource "aws_instance" "zookeeper" {
-  count         = "${var.zk-count}"
-  ami           = "${data.aws_ami.ubuntu.id}"
-  instance_type = "${local.zk-instance-type}"
-  availability_zone = "${element(var.azs, count.index)}"
+  count         = var.zk-count
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = local.zk-instance-type
+  availability_zone = element(var.azs, count.index)
   security_groups = ["${aws_security_group.ssh.name}", "${aws_security_group.zookeepers.name}"]
-  key_name = "${var.key_name}"
+  key_name = var.key_name
   tags = {
     Name = "${var.ownershort}-zookeeper-${count.index}-${element(var.azs, count.index)}"
     description = "zookeeper nodes - Managed by Terraform"
@@ -97,13 +97,13 @@ resource "aws_instance" "zookeeper" {
 }
 
 resource "aws_instance" "schema-registry" {
-  count         = "${var.schema-registry-count}"
-  ami           = "${data.aws_ami.ubuntu.id}"
-  instance_type = "${local.schema-registry-instance-type}"
-  availability_zone = "${element(var.azs, count.index)}"
+  count         = var.schema-registry-count
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = local.schema-registry-instance-type
+  availability_zone = element(var.azs, count.index)
   # security_groups = ["${var.security_group}"]
   security_groups = ["${aws_security_group.schema-registry.name}", "${aws_security_group.ssh.name}"]
-  key_name = "${var.key_name}"
+  key_name = var.key_name
   root_block_device {
     volume_size = 1000 # 1TB
   }
@@ -125,12 +125,12 @@ resource "aws_instance" "schema-registry" {
 }
 
 resource "aws_instance" "connect-cluster" {
-  count         = "${var.connect-count}"
-  ami           = "${data.aws_ami.ubuntu.id}"
-  instance_type = "${local.connect-instance-type}"
-  availability_zone = "${element(var.azs, count.index)}"
+  count         = var.connect-count
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = local.connect-instance-type
+  availability_zone = element(var.azs, count.index)
   security_groups = ["${aws_security_group.ssh.name}", "${aws_security_group.connect.name}"]
-  key_name = "${var.key_name}"
+  key_name = var.key_name
   tags = {
     Name = "${var.ownershort}-connect-${count.index}-${element(var.azs, count.index)}"
     description = "Connect nodes - Managed by Terraform"
@@ -144,12 +144,12 @@ resource "aws_instance" "connect-cluster" {
 }
 
 resource "aws_instance" "control-center" {
-  count         = "${var.c3-count}"
-  ami           = "${data.aws_ami.ubuntu.id}"
-  instance_type = "${local.c3-instance-type}"
-  availability_zone = "${element(var.azs, count.index)}"
+  count         =  var.c3-count
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = local.c3-instance-type
+  availability_zone = element(var.azs, count.index)
   security_groups = ["${aws_security_group.ssh.name}", "${aws_security_group.c3.name}"]
-  key_name = "${var.key_name}"
+  key_name = var.key_name
   root_block_device {
     volume_size = 300 # 300 GB
   }

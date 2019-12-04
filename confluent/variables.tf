@@ -21,7 +21,7 @@ variable "c3-count" {}
 
 provider "aws" {
   version = "~> 2.27"
-  region = "${var.region}"
+  region = var.region
 }
 
 variable "key_name" {}

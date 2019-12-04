@@ -1,6 +1,6 @@
 resource "aws_ebs_volume" "brokers" {
-  count             = "${var.broker-count}"
-  availability_zone = "${element(var.azs, count.index)}"
+  count             = var.broker-count
+  availability_zone = element(var.azs, count.index)
   size              = 40
   encrypted         = false
   tags = {
