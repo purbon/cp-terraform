@@ -97,8 +97,8 @@ resource "aws_security_group" "brokers" {
 
   # client connections from ssh hosts, connect, my ip, clients
   ingress {
-      from_port = 9092
-      to_port = 9092
+      from_port = 9000
+      to_port = 9099
       protocol = "TCP"
       self = true
       cidr_blocks = ["${local.myip-cidr}"]
