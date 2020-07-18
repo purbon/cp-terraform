@@ -1,0 +1,3 @@
+[submodule "terraform-gcp"]
+	path = terraform-gcp
+	url = git@github.com:purbon/cp-terraform-google-cloud.git
