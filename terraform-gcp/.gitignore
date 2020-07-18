@@ -1,9 +1,0 @@
-terraform.tfvars
-.terraform
-*.tfstate*
-credentials.json
-state.json
-
-Gemfile.lock
-.ruby-version
-.rspec
