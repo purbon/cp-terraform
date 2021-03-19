@@ -6,8 +6,13 @@ variable "region" {
   default = "eu-west-1"
 }
 
-variable "owner" {
-  default = "purbon"
+variable "Owner_Name" {
+  default = "Pere Urbon"
+}
+
+
+variable "Owner_Email" {
+  default = "pere@confluent.io"
 }
 
 variable "ownershort" {
@@ -49,8 +54,9 @@ module "ireland-cluster" {
   name           = "ireland-cluster"
   region         = "eu-west-1"
   azs            = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  owner          = var.owner
-  ownershort     = var.ownershort
-  key_name       = "purbon-ireland"
+  Owner_Name     = var.Owner_Name
+  Owner_Email    = var.Owner_Email
+  key_name       = "purbon-ireland-sa"
   myip           = var.myip
+  ownershort     = var.ownershort
 }

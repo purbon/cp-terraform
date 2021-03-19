@@ -1,6 +1,7 @@
 variable "name" {}
 variable "region" {}
-variable "owner" {}
+variable "Owner_Name" {}
+variable "Owner_Email" {}
 variable "ownershort" {}
 
 variable "zk-count" {
@@ -16,7 +17,7 @@ variable "c3-count" {}
 
 provider "aws" {
   version = "~> 2.27"
-  region = "${var.region}"
+  region = var.region
 }
 
 variable "key_name" {}

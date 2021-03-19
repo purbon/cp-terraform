@@ -33,7 +33,7 @@ locals {
 
 variable "azs" {
   description = "Run the EC2 Instances in these Availability Zones"
-  type = "list"
+  type = list
 }
 
 variable "myip" { }
