@@ -16,11 +16,15 @@ variable "connect-count" {
 variable "c3-count" {}
 
 provider "aws" {
-  version = "~> 2.27"
+  version = "~> 3.33"
   region = var.region
 }
 
 variable "key_name" {}
+
+data "aws_vpc" "default" {
+  default = true
+}
 
 data "aws_ami" "ubuntu" {
   most_recent = true
